@@ -1,14 +1,16 @@
-from gpiozero import LED
+from gpiozero import LED #include gpio library to control our leds
 from time import sleep
-import threading
+import threading #include threading so that we can start the cycle without looping forever waiting for it to end
 from flask import Flask, flash, redirect, render_template, request, session, abort
 app = Flask(__name__)
 
+#set uo led pins
 green = LED(17)
 yellow = LED(27)
 red = LED(22)
 
 jobs = []
+#flag so that we can stop the thread 
 stop = False
 
 def greenOn():
@@ -55,14 +57,14 @@ def cycle():
 		redOn()
 		sleep(1)
 		redOff()
-		if (stop == True):
+		if (stop == True): #break if stop cycle button has been clicked
 			break
 	return
 			
 
 	
 	
-@app.route("/")
+@app.route("/")# give us the page found in templates index.html
 def index():
 	return render_template(
     'index.html')
@@ -106,7 +108,7 @@ def redOFF():
 @app.route("/cycle")
 def CYCLE():
 	global jobs 
-	task1 = threading.Thread(target=cycle)
+	task1 = threading.Thread(target=cycle) # create a thread
 	jobs.append('task1')
 	task1.start()
 	return render_template(
